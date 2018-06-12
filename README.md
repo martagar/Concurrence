@@ -8,7 +8,7 @@ To execute this GUI, open *ejecutable.bat*.
 ## Automaton 1D
 You can change the rule you want the automaton to represent, the size and the number of generations.
 
-![alt text](Documents Readme/1D.png "Screenshot of the Automaton 1D.")
+![alt text](Documents_Readme/1D.png "Screenshot of the Automaton 1D.")
 
 Rules: http://mathworld.wolfram.com/ElementaryCellularAutomaton.html
 
@@ -17,14 +17,14 @@ This automaton represents [Conway's Game Life](https://en.wikipedia.org/wiki/Con
 
 It allows you to change the size, the number of generations and the type of neighborhood
 
-![alt text](Documents Readme/2D.png "Screenshot of the Automaton 2D.")
+![alt text](Documents_Readme/2D.png "Screenshot of the Automaton 2D.")
 
 ## Chemical Reaction
 It shows graphically the [Belusov-Zhabotinsky's Chemical Reaction](https://en.wikipedia.org/wiki/Belousov%E2%80%93Zhabotinsky_reaction).
 
 You can change the size and the parameters of the reaction.
 
-![alt text](Documents Readme/Reaccion.png "Screenshot of the Reaction")
+![alt text](Documents_Readme/Reaccion.png "Screenshot of the Reaction")
 
 # MandelBrot Set
 [Link to MandelBrot set](https://en.wikipedia.org/wiki/Mandelbrot_set).
@@ -36,7 +36,7 @@ javac MandelBrot.java
 java MandelBrot
 ```
 
-![alt text](Documents Readme/madelbrot.png "Screenshot of the MandelBrot Set").
+![alt text](Documents_Readme/madelbrot.png "Screenshot of the MandelBrot Set").
 
 # Tumor Growth
 It represents a tumor growth that depends on different parameters. It is based on this article: http://www.urop.uci.edu/journal/journal09/06_phan.pdf.
@@ -51,4 +51,4 @@ javac parallelTumorGraphic.java
 java parallelTumoralGrowth
 ```
 
-![alt text](Documents Readme/Crecimiento Tumor.png "Screenshot of the Tumor Growth")
+![alt text](Documents_Readme/Crecimiento_Tumor.png "Screenshot of the Tumor Growth")
