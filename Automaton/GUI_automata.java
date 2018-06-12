@@ -23,7 +23,7 @@ public class GUI_automata
 
 		pantalla.addTab("Automata 1D", Graf_1D);
 		pantalla.addTab("Automata 2D", Graf_2D);
-		pantalla.addTab("Reaccion Quimca", Graf_belZab);
+		pantalla.addTab("Reaccion Quimica", Graf_belZab);
 		frame.add(pantalla);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 

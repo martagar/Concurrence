@@ -1,2 +1,2 @@
-javac -cp "./;librerias/*" *.java
-java -cp "./;librerias/*" GUI_automata
+javac -cp "./;lib/*" *.java
+java -cp "./;lib/*" GUI_automata
