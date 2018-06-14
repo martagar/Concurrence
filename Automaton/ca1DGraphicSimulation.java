@@ -1,5 +1,5 @@
 /**
- * Clase que hace los gráficos del autómata celular con cálculo de entropía
+ * Automaton Cellular 1D's Graphics
  * @author Marta García Pérez
  */
 
@@ -12,83 +12,75 @@ import org.jfree.chart.axis.*;
 import org.jfree.chart.plot.*;
 import org.jfree.data.xy.*;
 
-public class ca1DGraphicSimulation extends JPanel
-{
+public class ca1DGraphicSimulation extends JPanel {
 	private static int nGen;
-	private static int n_celulas;
+	private static int n_cells;
 
-	static Automata_Cel_1D a_cel;
+	static Automaton_Cel_1D a_cel;
 	static Menu_1D menu = new Menu_1D();
-	static JPanel panel_AM; //frame para el menu y el automata
-	static JFrame frame_graficas;
+	static JPanel panel_AM; //frame of the menu and the automaton
+	static JFrame frame_graphics;
 
-	public ca1DGraphicSimulation()
-	{
+	public ca1DGraphicSimulation() {
 		ini_AM();
 		setSize(640,480);
 		setLayout(new BorderLayout());
 		add(panel_AM);
 	}
 
-    private static XYDataset crea_datos_Hamming()
-    {
-    	XYSeriesCollection conj_datos = new XYSeriesCollection();
-    	XYSeries hamming = new XYSeries("Hamming");
+  private static XYDataset make_data_Hamming() {
+  	XYSeriesCollection set_data = new XYSeriesCollection();
+  	XYSeries hamming = new XYSeries("Hamming");
 
-    	for(int i = 0; i < ca1DSimulator.iter; ++i)
-    		hamming.add(i,ca1DSimulator.curv_Hamming[i]);
+  	for(int i = 0; i < ca1DSimulator.iter; ++i)
+  		hamming.add(i,ca1DSimulator.curv_Hamming[i]);
 
-    	conj_datos.addSeries(hamming);
+  	set_data.addSeries(hamming);
 
-    	return conj_datos;
-    }
+  	return set_data;
+  }
 
-    private static JPanel crea_Grafica_Hamming()
-    {
-    	XYDataset datos = crea_datos_Hamming();
+  private static JPanel make_Graphic_Hamming() {
+  	XYDataset data = make_data_Hamming();
 
-    	JFreeChart graf = ChartFactory.createXYLineChart("Curva de Hamming", "Generaciones", "Celulas", datos);
+  	JFreeChart graph = ChartFactory.createXYLineChart("Hamming Curve", "Generations", "Cells", data);
 
-    	return new ChartPanel(graf);
-    }
+  	return new ChartPanel(graph);
+  }
 
-    private static XYDataset crea_datos_Entropia()
-    {
-    	XYSeriesCollection conj_datos = new XYSeriesCollection();
-    	XYSeries entropia = new XYSeries("Entropia");
+  private static XYDataset make_data_Entropy() {
+  	XYSeriesCollection set_data = new XYSeriesCollection();
+  	XYSeries entropy = new XYSeries("Entropy");
 
-    	for(int i = 0; i < ca1DSimulator.iter+1; ++i)
-    		entropia.add(i,ca1DSimulator.entropia_espacial[i]);
+  	for(int i = 0; i < ca1DSimulator.iter+1; ++i)
+  		entropy.add(i,ca1DSimulator.space_entropy[i]);
 
-    	conj_datos.addSeries(entropia);
+  	set_data.addSeries(entropy);
 
-    	return conj_datos;
-    }
+  	return set_data;
+  }
 
-    private static JPanel crea_Grafica_Entropia()
-    {
-    	XYDataset datos = crea_datos_Entropia();
+  private static JPanel make_Graphic_Entropy() {
+  	XYDataset data = make_data_Entropy();
 
-    	JFreeChart graf = ChartFactory.createXYLineChart("Curva de Entropia Espacial", "Generaciones", "Entropia", datos);
+  	JFreeChart graph = ChartFactory.createXYLineChart("Space Entropy Curve", "Generations", "Entropy", data);
 
-    	return new ChartPanel(graf);
-    }
+  	return new ChartPanel(graph);
+  }
 
-    public static void dibujarGraficas()
-    {
-    	frame_graficas = new JFrame();
-    	frame_graficas.setSize(640,480);
-    	frame_graficas.setLayout(new GridLayout(2,1));
-    	JPanel graf_curvHamming = crea_Grafica_Hamming();
-    	JPanel graf_entropia = crea_Grafica_Entropia();
+  public static void drawGraphics() {
+  	frame_graphics = new JFrame();
+  	frame_graphics.setSize(640,480);
+  	frame_graphics.setLayout(new GridLayout(2,1));
+  	JPanel graph_curvHamming = make_Graphic_Hamming();
+  	JPanel graph_entropy = make_Graphic_Entropy();
 
-    	frame_graficas.add(graf_curvHamming);
-    	frame_graficas.add(graf_entropia);
-    	frame_graficas.setVisible(true);
-    }
+  	frame_graphics.add(graph_curvHamming);
+  	frame_graphics.add(graph_entropy);
+  	frame_graphics.setVisible(true);
+  }
 
-	public void ini_AM()
-	{
+	public void ini_AM() {
 		panel_AM = new JPanel();
 		panel_AM.setSize(640,480);
 		panel_AM.setLayout(new BorderLayout());
@@ -97,66 +89,54 @@ public class ca1DGraphicSimulation extends JPanel
 		panel_AM.setVisible(true);
 	}
 
-	public static void addA_Cel(int n_cel, int gen)
-	{
-		n_celulas = n_cel;
+	public static void addA_Cel(int n_cel, int gen) {
+		n_cells = n_cel;
 		nGen = gen;
-		a_cel = new Automata_Cel_1D(n_cel, gen+1);
+		a_cel = new Automaton_Cel_1D(n_cel, gen+1);
 		panel_AM.add(a_cel, BorderLayout.CENTER);
 	}
 
-	public static void restart()
-	{
+	public static void restart() {
 		ca1DSimulator.gen = 0;
 		a_cel.setVisible(false);
 	}
 
-	public static void update(int gene[], int fila) 
-    {
-        for (int i = 0; i < n_celulas; ++i) 
-        {
-            Color c = new Color((gene[i]*25)%255, (gene[i]*50)%255, (gene[i]*75)%255);
-            Automata_Cel_1D.img.setRGB(i, fila, c.getRGB());
-        }
-        a_cel.repaint();
-    }
+	public static void update(int gene[], int row) {
+      for (int i = 0; i < n_cells; ++i) {
+          Color c = new Color((gene[i]*25)%255, (gene[i]*50)%255, (gene[i]*75)%255);
+          Automaton_Cel_1D.img.setRGB(i, row, c.getRGB());
+      }
+      a_cel.repaint();
+  }
 
-    public static int[] intr_manual()
-    {
-    	if(menu.txtCelMan.getText().equals(""))
-    		return new int[0];
-    	else
-    	{
-    		int[] res = new int[menu.txtCelMan.getText().length()];
-    		int i = 0;
-    		int j = 0;
-    		while(i < menu.txtCelMan.getText().length())
-    		{
-    			if(menu.txtCelMan.getText().charAt(i) != ',')
-    			{
-    				res[j] = Character.getNumericValue(menu.txtCelMan.getText().charAt(i));
-    				j++;
-    			}
-    			i++;
-    		}
-    		return res;
-    	}
-    }
+  public static int[] intr_manual() {
+  	if(menu.txtCelMan.getText().equals(""))
+  		return new int[0];
+  	else {
+  		int[] res = new int[menu.txtCelMan.getText().length()];
+  		int i = 0;
+  		int j = 0;
+  		while(i < menu.txtCelMan.getText().length()) {
+  			if(menu.txtCelMan.getText().charAt(i) != ',')	{
+  				res[j] = Character.getNumericValue(menu.txtCelMan.getText().charAt(i));
+  				j++;
+  			}
+  			i++;
+  		}
+  		return res;
+  	}
+  }
 
-    public static int[] calc_regla()
-	{
+  public static int[] calc_rule() {
 		int[] res = new int[8];
-		if(menu.txtRegla.getText().equals(""))
+		if(menu.txtRule.getText().equals(""))
 			return res;
-		else
-		{
-			int r = Integer.parseInt(menu.txtRegla.getText());
-			for(int i = 0; i < 8; ++i)
-			{
+		else {
+			int r = Integer.parseInt(menu.txtRule.getText());
+			for(int i = 0; i < 8; ++i)	{
 				if(r == 0)
 					res[i] = 0;
-				else
-				{
+				else	{
 					res[i] = r%2;
 					r /= 2;
 				}
@@ -166,58 +146,51 @@ public class ca1DGraphicSimulation extends JPanel
 	}
 }
 
-class Automata_Cel_1D extends JPanel
-{
+class Automaton_Cel_1D extends JPanel {
 	static BufferedImage img;
 
-	public Automata_Cel_1D(int n_cel, int nGen)
-	{
+	public Automaton_Cel_1D(int n_cel, int nGen) {
 		img = new BufferedImage(n_cel, nGen, BufferedImage.TYPE_INT_RGB);
 	}
 
-	public void paintComponent(Graphics g)
-	{
+	public void paintComponent(Graphics g) {
 		g.drawImage(img,0,0,getWidth(),getHeight(),this);
 	}
 }
 
-class Menu_1D extends JPanel
-{
-	private JLabel nCel = new JLabel("Numero de Celulas");
+class Menu_1D extends JPanel {
+	private JLabel nCel = new JLabel("Number of Cells");
 	JTextField txtCel = new JTextField();
 
-	private JLabel num_gen = new JLabel("Numero de Generaciones");
+	private JLabel num_gen = new JLabel("Number of Generations");
 	JTextField txtGen = new JTextField();
 
-	private JLabel nRegla = new JLabel("Numero de Regla");
-	JTextField txtRegla = new JTextField();
+	private JLabel nRule = new JLabel("Number of Rule");
+	JTextField txtRule = new JTextField();
 
-	private JLabel dim = new JLabel("Dimension del Lenguaje");
+	private JLabel dim = new JLabel("Size");
 	JTextField txtDim = new JTextField();
 
-	private JLabel cel_man = new JLabel("Introduccion Manual");
+	private JLabel cel_man = new JLabel("Manual Introduction");
 	JTextField txtCelMan = new JTextField();
 
-	private JButton boton = new JButton("Start");
+	private JButton button = new JButton("Start");
 
-	Menu_1D()
-	{
+	Menu_1D()	{
 		setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
 		add(nCel);
 		add(txtCel);
 		add(num_gen);
 		add(txtGen);
-		add(nRegla);
-		add(txtRegla);
+		add(nRule);
+		add(txtRule);
 		add(cel_man);
 		add(txtCelMan);
 
-		boton.addActionListener(new java.awt.event.ActionListener(){
-			public void actionPerformed(java.awt.event.ActionEvent evt)
-			{
-				if(boton.getText().equals("Start"))
-				{
-					boton.setText("Restart");
+		button.addActionListener(new java.awt.event.ActionListener(){
+			public void actionPerformed(java.awt.event.ActionEvent evt)	{
+				if(button.getText().equals("Start")) {
+					button.setText("Restart");
 
 					if(txtCelMan.getText().equals(""))
 						ca1DSimulator.n_c = Integer.parseInt(txtCel.getText());
@@ -229,20 +202,17 @@ class Menu_1D extends JPanel
 
 					ca1DGraphicSimulation.addA_Cel(ca1DSimulator.n_c,ca1DSimulator.iter);
 
-					ca1DSimulator.inicializar(4,ca1DSimulator.n_c/2);
+					ca1DSimulator.initialize(4,ca1DSimulator.n_c/2);
 
-					ca1DGraphicSimulation.update(ca1DSimulator.tiempoT,ca1DSimulator.gen++);
+					ca1DGraphicSimulation.update(ca1DSimulator.timeT,ca1DSimulator.gen++);
 
-					ca1DSimulator.realiza_automata();
-				}
-				else
-					if(boton.getText().equals("Restart"))
-					{
+					ca1DSimulator.make_automaton();
+				}	else if(button.getText().equals("Restart")) {
 						ca1DGraphicSimulation.restart();
-						boton.setText("Start");
+						button.setText("Start");
 					}
 			}
 		});
-		add(boton);
+		add(button);
 	}
 }

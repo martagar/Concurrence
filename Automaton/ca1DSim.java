@@ -1,5 +1,5 @@
 /**
- * Interfaz 
+ * Interface 
  * @author Marta García Pérez
  */
 

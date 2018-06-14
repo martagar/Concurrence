@@ -1,5 +1,5 @@
 /**
- * Clase que hace los gráficos del autómata celular
+ * Automaton Cellular 2D's Graphics
  * @author Marta García Pérez
  */
 
@@ -13,64 +13,57 @@ import org.jfree.chart.plot.*;
 import org.jfree.data.xy.*;
 import java.util.concurrent.*;
 
-public class ca2DGraphicSimulation extends JPanel
-{
-	private static int n_celulas;
+public class ca2DGraphicSimulation extends JPanel {
+	private static int n_cells;
 
-	static Automata_Cel_2D a_cel;
+	static Automaton_Cel_2D a_cel;
 	static Menu_2D menu = new Menu_2D();
-	static Celulas celulas;
-	static JPanel panel_AM; //panel para el menu y el automata
-	static JFrame frame_CV; //frame para la gráfica de células vivas
+	static Cells cells;
+	static JPanel panel_AM; //panel for the menu and the automaton
+	static JFrame frame_CV; //frame for the living cells graphic
 
-	public ca2DGraphicSimulation()
-	{
+	public ca2DGraphicSimulation() {
 		ini_AM();
 		setSize(640,480);
 		setLayout(new BorderLayout());
 		add(panel_AM);
 	}
 
-    private static XYDataset crea_datos()
-    {
-    	XYSeriesCollection conj_datos = new XYSeriesCollection();
-    	XYSeries vivas = new XYSeries("Vivas");
-    	XYSeries muertas = new XYSeries("Muertas");
+  private static XYDataset make_data() {
+  	XYSeriesCollection data_set = new XYSeriesCollection();
+  	XYSeries alive = new XYSeries("Alive");
+  	XYSeries dead = new XYSeries("Dead");
 
-    	for(int i = 0; i < ca2DSimulator.iter; ++i)
-    	{
-    		vivas.add(i,ca2DSimulator.celulas_vivas[i]);
-    		muertas.add(i,ca2DSimulator.n_c*ca2DSimulator.n_c - ca2DSimulator.celulas_vivas[i]);
-    	}
+  	for(int i = 0; i < ca2DSimulator.iter; ++i)	{
+  		alive.add(i,ca2DSimulator.living_cells[i]);
+  		dead.add(i,ca2DSimulator.n_c*ca2DSimulator.n_c - ca2DSimulator.living_cells[i]);
+  	}
 
-    	conj_datos.addSeries(vivas);
-    	conj_datos.addSeries(muertas);
+  	data_set.addSeries(alive);
+  	data_set.addSeries(dead);
 
-    	return conj_datos;
-    }
+  	return data_set;
+  }
 
-    private static JPanel crea_Graficas()
-    {
-    	XYDataset datos = crea_datos();
+  private static JPanel make_Graphics() {
+  	XYDataset data = make_data();
 
-    	JFreeChart graf = ChartFactory.createXYLineChart("Medicion celulas", "Generaciones", "Numero de Celulas", datos);
+  	JFreeChart graph = ChartFactory.createXYLineChart("Medicion cells", "Generaciones", "Numero de Cells", data);
 
-    	return new ChartPanel(graf);
-    }
+  	return new ChartPanel(graph);
+  }
 
-    public static void dibujarGrafica()
-    {
-    	frame_CV = new JFrame();
-    	frame_CV.setSize(640,480);
-    	frame_CV.setLayout(new BorderLayout());
-    	JPanel graficas = crea_Graficas();
+  public static void drawGraphic() {
+  	frame_CV = new JFrame();
+  	frame_CV.setSize(640,480);
+  	frame_CV.setLayout(new BorderLayout());
+  	JPanel graphics = make_Graphics();
 
-    	frame_CV.add(graficas);
-    	frame_CV.setVisible(true);
-    }
+  	frame_CV.add(graphics);
+  	frame_CV.setVisible(true);
+  }
 
-	public void ini_AM()
-	{
+	public void ini_AM() {
 		panel_AM = new JPanel();
 		panel_AM.setSize(640,480);
 		panel_AM.setLayout(new BorderLayout());
@@ -79,128 +72,111 @@ public class ca2DGraphicSimulation extends JPanel
 		panel_AM.setVisible(true);
 	}
 
-	public static void addA_Cel(int n_cel)
-	{
-		n_celulas = n_cel;
-		a_cel = new Automata_Cel_2D(n_cel);
+	public static void addA_Cel(int n_cel) {
+		n_cells = n_cel;
+		a_cel = new Automaton_Cel_2D(n_cel);
 		panel_AM.add(a_cel, BorderLayout.CENTER);
-		celulas = new Celulas();
-		panel_AM.add(celulas, BorderLayout.SOUTH);
+		cells = new Cells();
+		panel_AM.add(cells, BorderLayout.SOUTH);
 	}
 
-	public static void restart()
-	{
+	public static void restart() {
 		a_cel.setVisible(false);
-		celulas.setVisible(false);
+		cells.setVisible(false);
 		frame_CV.setVisible(false);
 	}
 
-	public static void update(int gene[][]) 
-    {
-    	for(int i = 0; i < gene.length; ++i)
-	        for (int j = 0; j < n_celulas; ++j) 
-	        {
-	            Color c = new Color((gene[i][j]*25)%255, (gene[i][j]*50)%255, (gene[i][j]*75)%255);
-	            Automata_Cel_2D.img.setRGB(j, i, c.getRGB());
-	        }
-        a_cel.repaint();
-    }
+	public static void update(int gene[][]) {
+  	for(int i = 0; i < gene.length; ++i)
+      for (int j = 0; j < n_cells; ++j)
+      {
+          Color c = new Color((gene[i][j]*25)%255, (gene[i][j]*50)%255, (gene[i][j]*75)%255);
+          Automaton_Cel_2D.img.setRGB(j, i, c.getRGB());
+      }
+    a_cel.repaint();
+  }
 }
 
-class Celulas extends JPanel
-{
-	static JLabel celulas = new JLabel("Celulas vivas: \nCelulas muertas: ");
+class Cells extends JPanel {
+	static JLabel cells = new JLabel("Living Cells: \nDead Cells: ");
 
-	Celulas()
-	{
-		add(celulas);
+	Cells()	{
+		add(cells);
 	}
-	public static void actualizar()
-	{
-		celulas.setText("Celulas vivas: " + ca2DSimulator.cel_vivas.get() + " Celulas muertas: " + (ca2DSimulator.n_c*ca2DSimulator.n_c-ca2DSimulator.cel_vivas.get()));
+
+	public static void update()	{
+		cells.setText("Living Cells: " + ca2DSimulator.living_cel.get() + " Dead Cells: " + (ca2DSimulator.n_c*ca2DSimulator.n_c-ca2DSimulator.living_cel.get()));
 	}
 }
 
-class Automata_Cel_2D extends JPanel
-{
+class Automaton_Cel_2D extends JPanel {
 	static BufferedImage img;
 
-	public Automata_Cel_2D(int n_cel)
-	{
+	public Automaton_Cel_2D(int n_cel) {
 		img = new BufferedImage(n_cel, n_cel, BufferedImage.TYPE_INT_RGB);
 	}
 
-	public void paintComponent(Graphics g)
-	{
+	public void paintComponent(Graphics g) {
 		g.drawImage(img,0,0,getWidth(),getHeight(),this);
 	}
 }
 
-class Menu_2D extends JPanel
-{
-	private JLabel nCel = new JLabel("Numero de Celulas");
+class Menu_2D extends JPanel {
+	private JLabel nCel = new JLabel("Number of Cells");
 	JTextField txtCel = new JTextField();
 
-	private JLabel num_gen = new JLabel("Numero de Generaciones");
+	private JLabel num_gen = new JLabel("Number of Generations");
 	JTextField txtGen = new JTextField();
 
-	private JLabel Vecindad = new JLabel("Vecindad (Newmann/Moore)");
-	JButton butVec = new JButton("Newmann");
+	private JLabel Neighbourhood = new JLabel("Neighbourhood (Newmann/Moore)");
+	JButton butNeigh = new JButton("Newmann");
 
-	private JButton boton = new JButton("Start");
+	private JButton button = new JButton("Start");
 
-	Menu_2D()
-	{
+	Menu_2D() {
 		setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
-		add(Vecindad);		
+		add(Neighbourhood);
 
-		butVec.addActionListener(new java.awt.event.ActionListener(){
-			public void actionPerformed(java.awt.event.ActionEvent evt)
-			{
-				if(butVec.getText().equals("Newmann"))
-					butVec.setText("Moore");
+		butNeigh.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt)	{
+				if(butNeigh.getText().equals("Newmann"))
+					butNeigh.setText("Moore");
 				else
-					butVec.setText("Newmann");
+					butNeigh.setText("Newmann");
 			}
 		});
 
-		add(butVec);
+		add(butNeigh);
 		add(nCel);
 		add(txtCel);
 		add(num_gen);
 		add(txtGen);
 
-		boton.addActionListener(new java.awt.event.ActionListener(){
-			public void actionPerformed(java.awt.event.ActionEvent evt)
-			{
-				if(boton.getText().equals("Start"))
-				{
-					boton.setText("Restart");
+		button.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt)	{
+				if(button.getText().equals("Start")) {
+					button.setText("Restart");
 
 					ca2DSimulator.n_c = Integer.parseInt(txtCel.getText());
 
-					if(ca2DSimulator.n_c >= 200)
-					{
+					if(ca2DSimulator.n_c >= 200) {
 						ca2DSimulator.iter = Integer.parseInt(txtCel.getText());
-						ca2DSimulator.vecindad = (butVec.getText().equals("Newmann")? 1 : 0);
+						ca2DSimulator.neighbourhood = (butNeigh.getText().equals("Newmann")? 1 : 0);
 
 						ca2DGraphicSimulation.addA_Cel(ca2DSimulator.n_c);
 
-						ca2DSimulator.inicializar();
+						ca2DSimulator.initialize();
 
-						ca2DGraphicSimulation.update(ca2DSimulator.tiempoT);
+						ca2DGraphicSimulation.update(ca2DSimulator.timeT);
 
-						ca2DSimulator.realiza_automata();
+						ca2DSimulator.make_automaton();
 					}
-				}
-				else
-					if(boton.getText().equals("Restart"))
-					{
+				}	else if(button.getText().equals("Restart"))	{
 						ca2DGraphicSimulation.restart();
-						boton.setText("Start");
+						button.setText("Start");
 					}
 			}
 		});
-		add(boton);
+		add(button);
 	}
 }

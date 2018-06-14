@@ -1,5 +1,5 @@
 /**
- * Clase que hace los gráficos del autómata celular
+ * Chemical reaction's graphics
  * @author Marta García Pérez
  */
 
@@ -8,22 +8,19 @@ import javax.swing.*;
 import java.awt.image.BufferedImage;
 import java.lang.String;
 
-public class belZabGraphic extends JPanel
-{
+public class belZabGraphic extends JPanel {
 	static Paint_BelZab a_cel;
 	static Menu_BelZab menu = new Menu_BelZab();
 	static JPanel panel_AM; //panel para el menu y el automata
 
-	public belZabGraphic()
-	{
+	public belZabGraphic() {
 		ini_AM();
 		setSize(640,480);
 		setLayout(new BorderLayout());
 		add(panel_AM);
 	}
 
-	public void ini_AM()
-	{
+	public void ini_AM() {
 		panel_AM = new JPanel();
 		panel_AM.setSize(640,480);
 		panel_AM.setLayout(new BorderLayout());
@@ -32,48 +29,40 @@ public class belZabGraphic extends JPanel
 		panel_AM.setVisible(true);
 	}
 
-	public static void addA_Cel()
-	{
+	public static void addA_Cel()	{
 		a_cel = new Paint_BelZab();
 		panel_AM.add(a_cel, BorderLayout.CENTER);
 	}
 
-	public static void restart()
-	{
+	public static void restart() {
 		a_cel.setVisible(false);
 		belZabParallel.u = false;
 	}
 
-	public static void update(int k) 
-    {
+	public static void update(int k) {
     	for(int i = 0; i < belZabParallel.size; ++i)
-	        for (int j = 0; j < belZabParallel.size; ++j) 
-	        {
+	        for (int j = 0; j < belZabParallel.size; ++j) {
 	            Color c = new Color(belZabParallel.a[i][j][k], belZabParallel.b[i][j][k], belZabParallel.c[i][j][k]);
 	            Paint_BelZab.img.setRGB(j, i, c.getRGB());
 	        }
-        a_cel.repaint();
+      a_cel.repaint();
     }
 }
 
-class Paint_BelZab extends JPanel
-{
+class Paint_BelZab extends JPanel {
 	static BufferedImage img;
 
-	public Paint_BelZab()
-	{
+	public Paint_BelZab()	{
 		img = new BufferedImage(belZabParallel.size, belZabParallel.size, BufferedImage.TYPE_INT_RGB);
 	}
 
-	public void paintComponent(Graphics g)
-	{
+	public void paintComponent(Graphics g) {
 		g.drawImage(img,0,0,getWidth(),getHeight(),this);
 	}
 }
 
-class Menu_BelZab extends JPanel
-{
-	private JLabel dim = new JLabel("Dimension");
+class Menu_BelZab extends JPanel {
+	private JLabel dim = new JLabel("Size");
 	JTextField txtDim = new JTextField();
 
 	private JLabel alpha = new JLabel("Alpha");
@@ -87,9 +76,8 @@ class Menu_BelZab extends JPanel
 
 	private JButton boton = new JButton("Start");
 
-	Menu_BelZab()
-	{
-		setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));	
+	Menu_BelZab()	{
+		setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
 
 		add(dim);
 		add(txtDim);
@@ -100,11 +88,9 @@ class Menu_BelZab extends JPanel
 		add(gamma);
 		add(txtgamma);
 
-		boton.addActionListener(new java.awt.event.ActionListener(){
-			public void actionPerformed(java.awt.event.ActionEvent evt)
-			{
-				if(boton.getText().equals("Start"))
-				{
+		boton.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt)	{
+				if(boton.getText().equals("Start"))	{
 					boton.setText("Restart");
 
 					belZabParallel.size = Integer.parseInt(txtDim.getText());
@@ -120,11 +106,8 @@ class Menu_BelZab extends JPanel
 
 					belZabGraphic.update(1);
 
-					belZabParallel.realiza_automata();
-				}
-				else
-					if(boton.getText().equals("Restart"))
-					{
+					belZabParallel.make_automaton();
+				}	else if(boton.getText().equals("Restart")) {
 						belZabGraphic.restart();
 						boton.setText("Start");
 					}

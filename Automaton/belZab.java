@@ -1,5 +1,5 @@
 /**
- * Simulación de la reacción química de Belusov-Zhabotinsky
+ * Belusov-Zhabotinsky's chemical reaction simulation
  * @author Marta García Pérez
  */
 
@@ -8,8 +8,7 @@ import java.util.Random;
 import javax.swing.*;
 import java.awt.*;
 
-public class belZab
-{
+public class belZab {
 	float[][][] a;
 	float[][][] b;
 	float[][][] c;
@@ -21,34 +20,28 @@ public class belZab
 	final float beta = 1.0f;
 	final float gamma = 1.0f;
 
-	public void setup()
-	{
+	public void setup()	{
 		Random r = new Random();
 		a = new float[size][size][2];
 		b = new float[size][size][2];
 		c = new float[size][size][2];
 
 		for(int x = 0; x < size; ++x)
-			for(int y = 0; y < size; ++y)
-			{
+			for(int y = 0; y < size; ++y)	{
 				a[x][y][p] = r.nextFloat();
 				b[x][y][p] = r.nextFloat();
 				c[x][y][p] = r.nextFloat();
 			}
 	}
 
-	public void compute()
-	{
+	public void compute()	{
 		for(int x = 0; x < size; ++x)
-		{
-			for(int y = 0; y < size; ++y)
-			{
+			for(int y = 0; y < size; ++y)	{
 				float c_a = 0;
 				float c_b = 0;
 				float c_c = 0;
 				for(int i = x-1; i <= x+1; ++i)
-					for(int j = y-1; j <= y+1; ++j)
-					{
+					for(int j = y-1; j <= y+1; ++j) {
 						c_a += a[(i+size)%size][(j+size)%size][p];
 						c_b += b[(i+size)%size][(j+size)%size][p];
 						c_c += c[(i+size)%size][(j+size)%size][p];
@@ -60,15 +53,11 @@ public class belZab
 				b[x][y][q] = Math.max(0,Math.min(1,c_b+c_b*(beta*c_c-alfa*c_a)));
 				c[x][y][q] = Math.max(0,Math.min(1,c_c+c_c*(gamma*c_a-beta*c_b)));
 			}
-		}
 
-		if(p == 0)
-		{
+		if(p == 0) {
 			p = 1;
 			q = 0;
-		}
-		else
-		{
+		}	else {
 			p = 0;
 			q = 1;
 		}
